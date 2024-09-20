@@ -57,9 +57,61 @@ function create(stmt) {
     }
   }
 }
-
-
+function CreateStmt(stmt) {
+	//console.log(stmt);
+        for (let key in stmt) {
+                 let ele = stmt[key];
+		 switch(key) {
+                     case "relation":
+                                 console.log(key);
+                                 console.log(ele);
+				 break;
+                     case "tableElts":
+                                 console.log(key);
+                                 for ( let i in ele) {
+                                    console.log(ele[i])
+                                    console.log(ele[i]["ColumnDef"]["colname"])
+                                    console.log(ele[i]["ColumnDef"]["typeName"]["names"])
+				 }
+				 break;
+                     case "oncommit":
+                                 console.log(key);
+                                 console.log(ele);
+				 break;
+                     default:
+				 console.log("*** Not *** ",key);
+		 }
+	}
+}
+function AlterTableStmt(stmt) {
+	console.log(stmt);
+}
 function stmt_print(array) {
+    console.log("");
+    for ( let i in array) {
+        for (let key in array[i]["RawStmt"]["stmt"]) {
+                 let stmt = array[i]["RawStmt"]["stmt"][key];
+		 switch(key) {
+                     case "CreateStmt":
+                                 console.log(key);
+                                 CreateStmt(stmt);
+				 break;
+                     case "AlterTableStmt":
+                                 console.log(key);
+                                 AlterTableStmt(stmt);
+				 break;
+                     default:
+				 console.log("*** Not *** ",key);
+		 }
+                 //for (let key2 in array[i]["RawStmt"]["stmt"][key]) {
+                 //    console.log("    ",key2);
+                 //    let ele = array[i]["RawStmt"]["stmt"][key][key2];
+		 //}
+	}
+    }
+}
+
+function stmt_print__(array) {
     for ( let i in array) {
         console.log(array[i]["RawStmt"]["stmt"]);
     }
@@ -116,12 +168,6 @@ function stmt(stmt) {
   }
 }
 
-function stmts_an(stmts) {
-  stmts.forEach((e, i) =>
-    //console.log(i, e["RawStmt"])
-    stmt(e["RawStmt"]["stmt"]),
-  );
-}
 
 const { positionals } = util.parseArgs({
   allowPositionals: true,
@@ -139,9 +185,11 @@ fs.readFile(filePath, { encoding: "utf8" })
     //console.log(file);
     const stmts = parse(file);
 
-    //print_json(stmts);
-    //stmts_an(stmts);
+    console.log("\njson ============================");
+    print_json(stmts);
+    //console.log("walk ============================");
     //walk(stmts, 0);
+    console.log("\nstmt ============================");
     stmt_print(stmts);
   })
   .catch((err) => {
