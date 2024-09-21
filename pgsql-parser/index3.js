@@ -11,11 +11,19 @@ function print(str) {
   }
 }
 
+function print_(str) {
+    process.stdout.write(str);
+}
 function print_dir(...obj) {
   if (P) {
     console.log(obj[0],obj[1]);
   }
 }
+
+function print_dir_(...obj) {
+    console.log(obj[0],obj[1]);
+}
+
 function print_dir2(...obj) {
   if (P) {
     console.log(obj[0],obj[1],obj[2]);
@@ -53,35 +61,46 @@ function CreateTrigStmt(stmt_d) {
 }
 
 function CreateFunctionStmt(stmt_d) {
-   console.log("not imprement");
+  //json(stmt_d);
+  print_dir("   funcname:" , stmt_d["funcname"] );
+  print_dir("   parameters:" , stmt_d["parameters"] );
+  print_dir("   returnType:" , stmt_d["returnType"] );
+  print_dir("   options:"    , stmt_d["options"] );
+
 }
 
 function CreateSeqStmt(stmt_d) {
-   console.log("not imprement");
+  //json(stmt_d);
+  print_dir("   sequence:"   , stmt_d["sequence"] );
+  print_dir("   options:"    , stmt_d["options"] );
 }
 function VariableSetStmt(stmt_d) {
-   console.log("not imprement");
+  console.log("    not imprement");
 }
 function DefineStmt(stmt_d) {
-   console.log("not imprement");
+  console.log("    not imprement");
 }
 function AlterOwnerStmt(stmt_d) {
-   console.log("not imprement");
+  console.log("    not imprement");
 }
 function SelectStmt(stmt_d) {
-   console.log("not imprement");
+  console.log("    not imprement");
 }
 function CreateEnumStmt(stmt_d) {
-   console.log("not imprement");
+  console.log("    not imprement");
 }
 function CreateDomainStmt(stmt_d) {
-   console.log("not imprement");
+  console.log("    not imprement");
 }
 function ViewStmt(stmt_d) {
-   console.log("not imprement");
+  //json(stmt_d);
+  print_dir("   view:"    , stmt_d["view"] );
+  print_dir("   query:"   , stmt_d["query"] );
 }
 function IndexStmt(stmt_d) {
-   console.log("not imprement");
+  //json(stmt_d);
+  print_dir("   idxname:"    , stmt_d["idxname"] );
+  print_dir("   relation:"   , stmt_d["relation"] );
 }
 function CreateStmt(stmt_d) {
   for (let key in stmt_d) {
@@ -119,28 +138,20 @@ function CreateStmt(stmt_d) {
 
                     let fk_attrs = null;
                     if (ele[i]["Constraint"]["fk_attrs"]) {
-                     //fk_attrs = ele[i]["Constraint"]["fk_attrs"][0]["String"]["str"];
                      fk_attrs = ele[i]["Constraint"]["fk_attrs"];
 		    }
                     let pk_attrs = null;
                     if (ele[i]["Constraint"]["pk_attrs"]) {
-                     //pk_attrs = ele[i]["Constraint"]["pk_attrs"][0]["String"]["str"];
                      pk_attrs = ele[i]["Constraint"]["pk_attrs"];
 		    }
-
                     print(" [" + i + "]\n");
                     print("  " + key +"\n");
                     print("   contype:" + contype + "\n");
                     print("   pktable schemaname :" + pktable_schemaname + "\n");
                     print("   pktable relname    :" +  pktable_relname + "\n");
-                    //print("   fk_attrs:" + fk_attrs + "\n");
-                    //print("   pk_attrs:" + pk_attrs + "\n");
 	            if (P) {
-                        //console.log("   fk_attrs:" , fk_attrs );
-                        //console.log("   pk_attrs:" , pk_attrs );
                         print_dir("   fk_attrs:" , fk_attrs );
                         print_dir("   pk_attrs:" , pk_attrs );
-
 		    }
                     break;
                 default:
@@ -175,9 +186,6 @@ function AlterTableStmt(stmt_d) {
                case "def":
                     let constraint = cmd["def"]["Constraint"];
                     print(" contype:"+constraint["contype"]+"\n");
-                    //print(" pktable:"+constraint["pktable"]["relname"]+"\n");
-                    //print(" fk_attrs:"+constraint["fk_attrs"][0]["String"]["str"]+"\n");
-                    //print(" pk_attrs:"+constraint["pk_attrs"][0]["String"]["str"]+"\n");
                     print_dir(" pktable:",constraint["pktable"]);
                     print_dir(" fk_attrs:",constraint["fk_attrs"]);
                     print_dir(" pk_attrs:",constraint["pk_attrs"]);
@@ -288,13 +296,11 @@ function walk(element, indent) {
   let base = "    ";
   let spc = base.repeat(indent);
 
-  //console.log(typeof(element));
   if (typeof element == "object") {
     if (Array.isArray(element)) {
       console.log(spc, "*** Array ***");
       console.log(spc, "[");
       for (let key in element) {
-        //console.log(spc,element[key]);
         walk(element[key], indent + 1);
       }
       console.log(spc, "]");
@@ -302,16 +308,11 @@ function walk(element, indent) {
       console.log(spc, "*** Dict ***");
       console.log(spc, "{");
       for (let key in element) {
-        //console.log(spc,key,":",element[key]);
         console.log(spc, " ", key, ":");
         walk(element[key], indent + 1);
       }
       console.log(spc, "}");
     }
-    //for (let key in element) {
-    //  console.log(element[key]);
-    //  walk(element[key]);
-    //}
   } else if (typeof element == "string") {
     console.log(spc, "*** string:", element);
   } else if (typeof element == "number") {
@@ -322,16 +323,6 @@ function walk(element, indent) {
     console.log("$$$", typeof element);
   }
 }
-/*
-function stmt(stmt) {
-  //console.log(stmt)
-  if (stmt["CreateStmt"]) {
-    create(stmt["CreateStmt"]);
-  } else {
-    console.log("stmt not case");
-  }
-}
-*/
 
 const { positionals } = util.parseArgs({
   allowPositionals: true,
