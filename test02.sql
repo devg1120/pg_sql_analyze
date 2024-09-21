@@ -1,12 +1,44 @@
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+
+
+CREATE TABLE address (
+    address_id integer primary key NOT NULL, 
+    address character varying(50) NOT NULL,
+    address2 character varying(50),
+    district character varying(20) NOT NULL,
+    city_id smallint NOT NULL,
+    postal_code character varying(10),
+    phone character varying(20) NOT NULL,
+    last_update timestamp without time zone DEFAULT now() NOT NULL
+
 );
 
-CREATE TABLE posts (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
-  content TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+
+CREATE TABLE store (
+    store_id integer  primary key NOT NULL, 
+    manager_staff_id smallint NOT NULL,
+    address_id smallint NOT NULL,
+    last_update timestamp without time zone DEFAULT now() NOT NULL,
+    FOREIGN KEY (address_id) REFERENCES address (address_id)
+
 );
+
+
+
+CREATE TABLE customer (
+    customer_id integer primary key, 
+    store_id integer NOT NULL,
+    first_name character varying(45) NOT NULL,
+    last_name character varying(45) NOT NULL,
+    email character varying(50),
+    address_id integer NOT NULL,
+    activebool boolean DEFAULT true NOT NULL,
+    last_update timestamp without time zone DEFAULT now(),
+    active integer,
+    FOREIGN KEY (store_id) REFERENCES store (store_id),
+    FOREIGN KEY (address_id) REFERENCES address (address_id)
+
+
+);
+
+
+
