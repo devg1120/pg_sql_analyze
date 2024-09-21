@@ -14,54 +14,10 @@ function print(str) {
 function print_json(stmts) {
   if (P) {
     process.stdout.write(JSON.stringify(stmts, null, 2));
+    console.log("");
   }
 }
 
-function create__(stmt) {
-  //console.log("create:" , stmt)
-  console.log("create:", stmt["relation"]["relname"]);
-  if (stmt["tableElts"]) {
-    for (const e of stmt["tableElts"]) {
-      console.log(e);
-      // if (e["ColumnDef"]);
-    }
-  }
-}
-
-function create(stmt) {
-  console.log("create:", stmt);
-  console.log("create:", stmt["relation"]["relname"]);
-  for (const key in stmt) {
-    switch (key) {
-      case "relation":
-        for (const key2 in stmt[key]) {
-          // dict
-          console.log(key, key2);
-        }
-        break;
-      case "tableElts":
-        for (const dict of stmt[key]) {
-          //array
-          for (let key2 in dict) {
-            switch (key2) {
-              case "ColumnDef":
-                for (const key3 in dict[key2]) {
-                  // dict
-                  console.log(key, key2, key3);
-                }
-
-                break;
-              default:
-                console.log("not reco key:", key);
-            }
-          }
-        }
-        break;
-      default:
-        console.log("not reco key:", key);
-    }
-  }
-}
 function CreateStmt(stmt_d) {
   for (let key in stmt_d) {
     let ele = stmt_d[key];
@@ -123,7 +79,6 @@ function AlterTableStmt(stmt_d) {
 }
 
 function stmt_print(array) {
-  console.log("");
   for (let i in array) {
     for (let key in array[i]["RawStmt"]["stmt"]) {
       let stmt_d = array[i]["RawStmt"]["stmt"][key];
@@ -140,10 +95,6 @@ function stmt_print(array) {
         default:
           console.log("*** Not *** ", key);
       }
-      //for (let key2 in array[i]["RawStmt"]["stmt"][key]) {
-      //    console.log("    ",key2);
-      //    let ele = array[i]["RawStmt"]["stmt"][key][key2];
-      //}
     }
   }
 }
@@ -191,7 +142,7 @@ function walk(element, indent) {
     console.log("$$$", typeof element);
   }
 }
-
+/*
 function stmt(stmt) {
   //console.log(stmt)
   if (stmt["CreateStmt"]) {
@@ -200,37 +151,68 @@ function stmt(stmt) {
     console.log("stmt not case");
   }
 }
+*/
 
 const { positionals } = util.parseArgs({
   allowPositionals: true,
 });
 
-if (positionals.length != 1) {
-  console.log("arg: filepath");
+if (positionals.length == 0) {
+  console.log("arg: <filepath>");
+  console.log("     <filepath> np");
+  console.log("     <filepath> json");
+  console.log("     <filepath> walk");
   process.exit(1);
 }
 
-const filePath = positionals[0];
+let filePath = null;
+let mode = "stmt";
+
+if (positionals.length == 1) {
+    filePath = positionals[0];
+} else if (positionals.length == 2) {
+    if (positionals[1] == "np") {
+	    P = false;
+    } else if (positionals[1] == "json") {
+	    mode = "json"
+    } else if (positionals[1] == "walk") {
+	    mode = "walk"
+    }
+    filePath = positionals[0];
+}
 
 fs.readFile(filePath, { encoding: "utf8" })
   .then((file) => {
     //console.log(file);
     const stmts = parse(file);
-
-    console.log("\njson ============================");
-    print_json(stmts);
-    //console.log("walk ============================");
+/*
+    console.log("json ============================");
+    //print_json(stmts);
+    console.log("walk ============================");
     //walk(stmts, 0);
-    console.log("\nstmt ============================");
+    console.log("stmt ============================");
     stmt_print(stmts);
+*/
+   switch(mode) {
+          case "json":
+                  console.log("json ============================");
+                  print_json(stmts);
+                  break
+          case "walk":
+                  console.log("walk ============================");
+                  walk(stmts, 0);
+                  break
+          case "stmt":
+                  console.log("stms ============================");
+                  stmt_print(stmts);
+                  break
+          default:
+                   console.log("unknown mode:",mode);
+   }
+
   })
   .catch((err) => {
     console.error(err.message);
     process.exit(1);
   });
 
-//const stmts = parse('SELECT * FROM test_table');
-
-//stmts[0].RawStmt.stmt.SelectStmt.fromClause[0].RangeVar.relname = 'another_table';
-
-//console.log(deparse(stmts));

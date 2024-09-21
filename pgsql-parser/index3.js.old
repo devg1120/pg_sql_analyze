@@ -16,7 +16,7 @@ function print_json(stmts) {
     process.stdout.write(JSON.stringify(stmts, null, 2));
   }
 }
-
+/*
 function create__(stmt) {
   //console.log("create:" , stmt)
   console.log("create:", stmt["relation"]["relname"]);
@@ -62,6 +62,8 @@ function create(stmt) {
     }
   }
 }
+*/
+
 function CreateStmt(stmt_d) {
   for (let key in stmt_d) {
     let ele = stmt_d[key];
@@ -123,7 +125,6 @@ function AlterTableStmt(stmt_d) {
 }
 
 function stmt_print(array) {
-  console.log("");
   for (let i in array) {
     for (let key in array[i]["RawStmt"]["stmt"]) {
       let stmt_d = array[i]["RawStmt"]["stmt"][key];
@@ -140,10 +141,6 @@ function stmt_print(array) {
         default:
           console.log("*** Not *** ", key);
       }
-      //for (let key2 in array[i]["RawStmt"]["stmt"][key]) {
-      //    console.log("    ",key2);
-      //    let ele = array[i]["RawStmt"]["stmt"][key][key2];
-      //}
     }
   }
 }
@@ -191,7 +188,7 @@ function walk(element, indent) {
     console.log("$$$", typeof element);
   }
 }
-
+/*
 function stmt(stmt) {
   //console.log(stmt)
   if (stmt["CreateStmt"]) {
@@ -200,28 +197,38 @@ function stmt(stmt) {
     console.log("stmt not case");
   }
 }
+*/
 
 const { positionals } = util.parseArgs({
   allowPositionals: true,
 });
 
-if (positionals.length != 1) {
-  console.log("arg: filepath");
+if (positionals.length == 0) {
+  console.log("arg: <filepath>");
+  console.log("arg: <filepath> np");
   process.exit(1);
 }
 
-const filePath = positionals[0];
+let filePath = null;
+if (positionals.length == 1) {
+    filePath = positionals[0];
+} else if (positionals.length == 2) {
+    if (positionals[1] == "np") {
+	    P = false;
+    }
+    filePath = positionals[0];
+}
 
 fs.readFile(filePath, { encoding: "utf8" })
   .then((file) => {
     //console.log(file);
     const stmts = parse(file);
 
-    console.log("\njson ============================");
-    print_json(stmts);
-    //console.log("walk ============================");
+    console.log("json ============================");
+    //print_json(stmts);
+    console.log("walk ============================");
     //walk(stmts, 0);
-    console.log("\nstmt ============================");
+    console.log("stmt ============================");
     stmt_print(stmts);
   })
   .catch((err) => {
