@@ -251,7 +251,6 @@ create_stmt
   / create_type_stmt
   / create_view_stmt
   / create_aggregate_stmt
-  / create_function_stmt  //GUSA
 
 alter_stmt
   = alter_table_stmt
@@ -601,26 +600,7 @@ declare_stmt
     }
   }
 
-create_func_opt_B
-  = 'LANGUAGE' __ ident_name __'IMMUTABLE'* __ 'AS' __ '$_$'.+'$_$' 
-  / 'LANGUAGE' __ ident_name __'IMMUTABLE'* __ 'AS' __ '$$'.+'$$' 
-
-create_func_opt_A
-  = 'LANGUAGE' __ ident_name __'IMMUTABLE'* __ 'AS $_$' __ .+ __ '$_$' 
-  / 'LANGUAGE' __ ident_name __'IMMUTABLE'* __ 'AS $$' __ .+ __ '$$' 
-
-create_func_opt____
-  = 'LANGUAGE' __ ident_name __'IMMUTABLE'* __ 'AS $$' __ .* __ '$$'
-   / 'LANGUAGE' __ ident_name __'IMMUTABLE'* __ 'AS $_$' __ .* __ '$_$' 
-
 create_func_opt
-  = [^;]+'END'[^;]+  
-  / [^;]+';'[^;]+  
-
-create_func_opt_2
-  = [^;]+  
-
-create_func_opt_org
   = 'LANGUAGE' __ ln:ident_name __ {
     // => literal_string
     return {
@@ -678,7 +658,7 @@ create_func_opt_org
     // => { type: 'as'; begin?: string; declare?: declare_stmt; expr: multiple_stmt; end?: string; symbol: string; }
     const start = c.join('')
     const end = l.join('')
-    //GUSA if (start !== end) throw new Error(`start symbol '${start}'is not same with end symbol '${end}'`)
+    if (start !== end) throw new Error(`start symbol '${start}'is not same with end symbol '${end}'`)
     return {
       type: 'as',
       declare: de && de.ast,
@@ -724,9 +704,7 @@ create_function_stmt
   t:'FUNCTION'i __
   c:table_name __ LPAREN __ args:alter_func_args? __ RPAREN __
   r:func_returns? __
-  //GUSA fo:create_func_opt* __ SEMICOLON? __ { 
-  //fo:create_func_opt* __   {
-  fo:create_func_opt* __   {
+  fo:create_func_opt* __ SEMICOLON? __ {
     /*
       export type create_function_stmt_t = {
         type: 'create';

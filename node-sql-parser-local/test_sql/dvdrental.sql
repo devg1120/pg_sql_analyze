@@ -44,7 +44,7 @@ ALTER DOMAIN public.year OWNER TO postgres;
 --
 -- Name: _group_concat(text, text); Type: FUNCTION; Schema: public; Owner: postgres
 --
-/*
+
 CREATE FUNCTION public._group_concat(text, text) RETURNS text
     LANGUAGE sql IMMUTABLE
     AS $_$
@@ -54,7 +54,7 @@ SELECT CASE
   ELSE $1 || ', ' || $2
 END
 $_$;
-*/
+
 
 ALTER FUNCTION public._group_concat(text, text) OWNER TO postgres;
 
@@ -62,7 +62,6 @@ ALTER FUNCTION public._group_concat(text, text) OWNER TO postgres;
 -- Name: film_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-/*
 CREATE FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) RETURNS SETOF integer
     LANGUAGE sql
     AS $_$
@@ -72,7 +71,6 @@ CREATE FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT 
      AND store_id = $2
      AND inventory_in_stock(inventory_id);
 $_$;
-*/
 
 
 ALTER FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO postgres;
@@ -80,7 +78,7 @@ ALTER FUNCTION public.film_in_stock(p_film_id integer, p_store_id integer, OUT p
 --
 -- Name: film_not_in_stock(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
-/*
+
 CREATE FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) RETURNS SETOF integer
     LANGUAGE sql
     AS $_$
@@ -90,14 +88,14 @@ CREATE FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, 
     AND store_id = $2
     AND NOT inventory_in_stock(inventory_id);
 $_$;
-*/
+
 
 ALTER FUNCTION public.film_not_in_stock(p_film_id integer, p_store_id integer, OUT p_film_count integer) OWNER TO postgres;
 
 --
 -- Name: get_customer_balance(integer, timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
 --
-/*
+
 CREATE FUNCTION public.get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) RETURNS numeric
     LANGUAGE plpgsql
     AS $$
@@ -135,14 +133,14 @@ BEGIN
     RETURN v_rentfees + v_overfees - v_payments;
 END
 $$;
-*/
+
 
 ALTER FUNCTION public.get_customer_balance(p_customer_id integer, p_effective_date timestamp without time zone) OWNER TO postgres;
 
 --
 -- Name: inventory_held_by_customer(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
-/*
+
 CREATE FUNCTION public.inventory_held_by_customer(p_inventory_id integer) RETURNS integer
     LANGUAGE plpgsql
     AS $$
@@ -157,14 +155,14 @@ BEGIN
 
   RETURN v_customer_id;
 END $$;
-*/
+
 
 ALTER FUNCTION public.inventory_held_by_customer(p_inventory_id integer) OWNER TO postgres;
 
 --
 -- Name: inventory_in_stock(integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
-/*
+
 CREATE FUNCTION public.inventory_in_stock(p_inventory_id integer) RETURNS boolean
     LANGUAGE plpgsql
     AS $$
@@ -194,14 +192,14 @@ BEGIN
       RETURN TRUE;
     END IF;
 END $$;
-*/
+
 
 ALTER FUNCTION public.inventory_in_stock(p_inventory_id integer) OWNER TO postgres;
 
 --
 -- Name: last_day(timestamp without time zone); Type: FUNCTION; Schema: public; Owner: postgres
 --
-/*
+
 CREATE FUNCTION public.last_day(timestamp without time zone) RETURNS date
     LANGUAGE sql IMMUTABLE STRICT
     AS $_$
@@ -212,14 +210,14 @@ CREATE FUNCTION public.last_day(timestamp without time zone) RETURNS date
       ((EXTRACT(YEAR FROM $1) operator(pg_catalog.||) '-' operator(pg_catalog.||) (EXTRACT(MONTH FROM $1) + 1) operator(pg_catalog.||) '-01')::date - INTERVAL '1 day')::date
     END
 $_$;
-*/
+
 
 ALTER FUNCTION public.last_day(timestamp without time zone) OWNER TO postgres;
 
 --
 -- Name: last_updated(); Type: FUNCTION; Schema: public; Owner: postgres
 --
-/*
+
 CREATE FUNCTION public.last_updated() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -227,21 +225,21 @@ BEGIN
     NEW.last_update = CURRENT_TIMESTAMP;
     RETURN NEW;
 END $$;
-*/
+
 
 ALTER FUNCTION public.last_updated() OWNER TO postgres;
 
 --
 -- Name: customer_customer_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
-/*
+
 CREATE SEQUENCE public.customer_customer_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-*/
+
 
 ALTER TABLE public.customer_customer_id_seq OWNER TO postgres;
 

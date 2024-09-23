@@ -111,7 +111,17 @@ export type declare_stmt_t = { type: 'declare'; declare: declare_variable_item[]
 
 export type declare_stmt = AstStatement<declare_stmt_t>;
 
-export type create_func_opt = literal_string | { type: 'as'; begin?: string; declare?: declare_stmt; expr: multiple_stmt; end?: string; symbol: string; } | literal_numeric | { type: "set"; parameter: ident_name; value?: { prefix: string; expr: expr }};
+type create_func_opt_B = never;
+
+type create_func_opt_A = never;
+
+type create_func_opt____ = never;
+
+type create_func_opt = never;
+
+type create_func_opt_2 = never;
+
+export type create_func_opt_org = literal_string | { type: 'as'; begin?: string; declare?: declare_stmt; expr: multiple_stmt; end?: string; symbol: string; } | literal_numeric | { type: "set"; parameter: ident_name; value?: { prefix: string; expr: expr }};
 
 export type create_function_stmt_t = {
         type: 'create';
