@@ -10,10 +10,16 @@ function print_json(stmts) {
 }
 
 function parse( file ) {
-
+    let ast = null;
     const parser = new Parser();
-    const ast = parser.astify(file); // mysql sql grammer parsed by default
-    
+    try {
+       ast = parser.astify(file); // mysql sql grammer parsed by default
+    } catch (e) {
+      console.log("msg:",e.message);
+      //console.log(e.expected);
+      console.log("found:",e.found);
+      console.log("loc:",e.location);
+    }
     //console.log(ast);
     return ast;
 }
