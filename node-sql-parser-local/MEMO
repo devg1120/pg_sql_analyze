@@ -17,6 +17,7 @@ vi package.json
   }
 
 
+npm i
 
 node systax_test_dir.js ./test_sql/
 
