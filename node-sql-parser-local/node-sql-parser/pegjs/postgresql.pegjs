@@ -1707,8 +1707,8 @@ alter_table_stmt
     KW_TABLE __
     ife:if_exists? __
     o:'only'i? __
-    //t:table_ref_list __   /*GUSA*/
-    t:table_name  __        /*GUSA*/
+    t:table_ref_list? __   /*GUSA*/
+    //tt:table_name?  __        /*GUSA*/
     ac:(ALTER_RENAME / ALTER_OWNER_TO / ALTER_SET_SCHEMA)? __  /*GUSA*/
     e:alter_action_list? {   /*GUSA*/
       /*

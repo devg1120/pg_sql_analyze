@@ -25,4 +25,5 @@ v20.16.0
 
 # npx prettier  index2.js  --write
 
+# node ./index3.js   ../***.sql
 

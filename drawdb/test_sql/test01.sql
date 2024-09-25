@@ -1,0 +1,14 @@
+CREATE TABLE users (
+  id INT PRIMARY KEY,
+  name VARCHAR(100),
+  --created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP 
+);
+
+CREATE TABLE posts (
+  id INT PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  content TEXT,
+  --created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP 
+);
